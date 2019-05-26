@@ -1,0 +1,98 @@
+from flask import Flask, request
+import requests, json
+import ast
+from fl_agg import model_aggregation
+
+app = Flask(__name__)
+
+@app.route('/')
+def hello():
+	return "Server running !"
+
+@app.route('/clientstatus', methods=['GET','POST'])
+def client_status():
+	url = "http://localhost:8001/serverack"
+
+	if request.method == 'POST':
+		c_status = request.json['c_status']
+		print(c_status)
+
+		if c_status == "1":
+			serverack = {'s_ack': '1'}
+			# response = requests.post( url, data=json.dumps(serverack), headers={'Content-Type': 'application/json'} )
+			return str(serverack)
+		else:
+			return "Client status not OK!"
+	else:
+		return "GET request received!"
+		
+@app.route('/cmodel', methods=['POST'])
+def getmodel():
+	if request.method == 'POST':
+		file = request.files['model'].read()
+		fname = request.files['json'].read()
+		# cli = request.files['id'].read()
+
+		fname = ast.literal_eval(fname.decode("utf-8"))
+		cli = fname['id']+'\n'
+		fname = fname['fname']
+
+		with open('clients.txt', 'a+') as f:
+			f.write(cli)
+		
+		print(fname, cli)
+		wfile = open("client_models/"+fname, 'wb')
+		wfile.write(file)
+			
+		return "Model received!"
+	else:
+		return "No file received!"
+
+@app.route('/aggregation')
+def perform_model_aggregation():
+	model_aggregation()
+	return 'Model aggregation done!\nGlobal model written to persistent storage.'
+
+@app.route('/sendagg')
+def send_agg_to_clients():
+	clients = ''
+	with open('clients.txt', 'r') as f:
+		clients = f.read()
+	clients = clients.split('\n')
+	
+	for c in clients:
+		if c != '':
+			file = open("persistent_storage/agg_model.h5", 'rb')
+			data = {'fname':'agg_model.h5'}
+			files = {
+				'json': ('json_data', json.dumps(data), 'application/json'),
+				'model': ('agg_model.h5', file, 'application/octet-stream')
+			}
+			
+			print(c+'aggmodel')
+			req = requests.post(url=c+'aggmodel', files=files)
+			print(req.status_code)
+	
+	# print(req.text)
+	return "Aggregated model sent !"
+
+
+
+
+if __name__ == '__main__':
+	app.run(host='localhost', port=8000, debug=False, use_reloader=True)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
