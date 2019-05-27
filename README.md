@@ -4,13 +4,13 @@ An implementation to simulate a federated learning environment.
 
 It is an attempt to mimic the scenario described in the paper [Towards Federated Learning at Scale: System Design](https://arxiv.org/pdf/1902.01046)
 
-Tech stack
+### Tech stack
 * Python 3.6.1
 * Keras
 * Flask
 
 
-## Run the system below in steps:
+## Run the system using the steps below:
 ### Booting up
 1. Run "Device 1" using `python app.py`
 2. Run "Device 2" using `python app.py`
@@ -23,7 +23,7 @@ Servers -
 * Device1 - `http://localhost:8001/`
 * Device2 - `http://localhost:8002/`
 
-Everything will work using the REST API. 
+Everything will work using the REST APIs. 
 
 ### System working
 1. First a model will be trained locally on the device.
