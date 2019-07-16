@@ -15,7 +15,7 @@ def hello():
 def send_status():
 	api_url = 'http://localhost:8000/clientstatus'
 
-	data = {'c_status': '1'}
+	data = {'client_id': '8001'}
 	print(data)
 
 	r = requests.post(url=api_url, json=data)
@@ -27,20 +27,20 @@ def send_status():
 
 @app.route('/sendmodel')
 def send_model():
-	file = open("/Users/adeshgautam/Desktop/FL/prod/device1/local_model/mod1.npy", 'rb')
+	file = open("local_model/mod1.npy", 'rb')
 	data = {'fname':'model1.npy', 'id':'http://localhost:8001/'}
 	files = {
 		'json': ('json_data', json.dumps(data), 'application/json'),
 		'model': ('model1.npy', file, 'application/octet-stream')
 	}
 
-	req = requests.post(url='http://localhost:8000/cmodel', 
+	req = requests.post(url='http://localhost:8003/cmodel', 
 						files=files)
 	# print(req.text)
 	return "Model sent !"
 
 @app.route('/aggmodel', methods=['POST'])
-def getmodel():
+def get_agg_model():
 	if request.method == 'POST':
 		file = request.files['model'].read()
 		fname = request.files['json'].read()
