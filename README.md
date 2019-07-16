@@ -53,7 +53,7 @@ There will be a response from the main server.
 
 I tested this on the MNIST data and after 2 rounds got an accuracy of about `95%`. The model will eventually update when more devices will be used. The models on devices are being trained on all the train data and also because of this the accuracy is consistent, if the data is partitioned among the devices it would reveal the real performance.
 
-If you would improve the current system please feel free to experiment and submit a PR.
+#### If you would like to improve the current system please feel free to experiment and submit a PR.
 
 ## Future improvements
 * Better model aggregation methods.
